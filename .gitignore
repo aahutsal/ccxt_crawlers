@@ -1,0 +1,11 @@
+bin/
+pkg/mod
+
+/ccxt
+.log
+node_modules/
+package-lock.json
+yarn.lock
+.cluster-config.js
+*.log
+.#*.*

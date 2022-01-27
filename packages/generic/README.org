@@ -1,0 +1,59 @@
+#+TITLE: DIAData major architecture improvement proposal
+#+AUTHOR: Arsen A. Hutsal
+#+EMAIL: aahutsal@gmail.com
+#+LANGUAGE: en
+#+LABEL: DIAData DIA Architecture Improvement
+
+
+* The Problem
+Current DIAData architecture (especially data fetching) is pretty simple but requires too much effort to support all existing data sources (exchanges, blockchains, aggregation sites (e.g. coinmarketcap.com), and such). Besides that, database backend might also be replaced shortly and this would also require some effort to code new database usage. Currently it looks like that: 
+#+begin_src plantuml :file ./docs/images/1.png :exports results :skinparam packageStyle
+
+together {
+  cloud "Crawlers" as C {
+  node C1 as C1 {
+    actor C1 <<Crawler instance>> as C1
+  }
+  node C2 as C2 {
+    actor C2 <<Crawler instance>> as C2
+  }
+  node C3 as C3 {
+    actor C3 <<Crawler instance>> as C3
+  }
+  }
+
+  cloud "Hazelcast" as HZ{
+     node HZ1 <<Hazelcast instance>> {
+}
+     node HZ2 <<Hazelcast instance>> {
+}
+     node HZ3 <<Hazelcast instance>> {
+}
+   }
+
+  cloud "Kafka" as KAFKA {
+     node K1 <<Kafka instance>> {
+}
+     node K2 <<Kafka instance>> {
+}
+     node K3 <<Kafka instance>> {
+}
+   }
+
+  database InfluxDB <<Influx>> as InfluxDB {
+  }
+  database Neo4J <<Neo4j>> as NeoDB {
+  }
+
+  HZ -> KAFKA : sink streams to
+  KAFKA -> InfluxDB: sink streams to
+  KAFKA -> NeoDB: sink streams to
+
+
+}
+#+end_src
+#+RESULTS:
+[[file:./docs/images/1.png]]
+* 
+
+* 
