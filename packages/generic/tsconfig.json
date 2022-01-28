@@ -16,7 +16,7 @@
       "ES2020"
     ]
   },
-    "include": ["packages/**/lib/*.ts", "packages/*.ts"],
+    "include": ["lib/*.ts", "*.ts"],
   "exclude": [
     "node_modules",
     "**/*.spec.ts",
