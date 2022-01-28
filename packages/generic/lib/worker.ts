@@ -6,8 +6,12 @@ import process from 'process'
 
 import { Worker, isMainThread, parentPort, workerData } from 'worker_threads';
 
+const root = process.env.NODE_ENV === 'production'?'/mnt/orderbooks':'./orderbooks';
+
+log(`Would write data to this root ${root}`)
+
 async function go(ex: Exchange) {
-    await fs.mkdir(`${ex.id}/orderbooks`, { recursive: true });
+    await fs.mkdir(`${root}/${ex.id}/orderbooks`, { recursive: true });
     await ex.loadMarkets()
     const limit = pLimit(3);
     const runners = Object.keys(ex.markets).map(market => limit(() => ex.fetchOrderBook(market)))
@@ -19,7 +23,7 @@ async function go(ex: Exchange) {
         log(`Fetching next tick ${ex.id}`)
         await ex.fetchOrderBooks()
             .then((obs) =>
-                fs.writeFile(`${ex.id}/orderbooks/${Date.now()}.json`, JSON.stringify(obs))
+                fs.writeFile(`${root}/${ex.id}/orderbooks/${Date.now()}.json`, JSON.stringify(obs))
             )
     }
 }
@@ -42,7 +46,8 @@ async function goAsync(exchange: string) {
 
 if (isMainThread) {
     log(`Primary ${process.pid} is running`);
-    module.exports = {goAsync}
+    fs.mkdir(root, { recursive: true })
+    module.exports = { goAsync }
 } else {
     const exName = workerData;
     log(`Runnine ${exName} in separate thread`);
