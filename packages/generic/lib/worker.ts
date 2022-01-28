@@ -25,6 +25,7 @@ async function go(ex: Exchange) {
             .then((obs) =>
                 fs.writeFile(`${root}/${ex.id}/orderbooks/${Date.now()}.json`, JSON.stringify(obs))
             )
+            .catch(error)
     }
 }
 async function goAsync(exchange: string) {
